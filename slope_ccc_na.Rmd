@@ -1,0 +1,94 @@
+---
+title: "not adjusted ccc"
+author: "Haoran Zhang"
+date: '2022-10-06'
+output: html_document
+---
+
+```{r}
+library(RSQLite)
+library(lubridate)
+library(dplyr)
+ivgtt<-dbConnect(RSQLite::SQLite(),"ivgtt.sqlite")
+```
+
+
+```{r}
+Begin<-read.csv("Begin.csv")
+Final<-read.csv("Final.csv")
+Combine<-read.csv("Combine.csv")
+
+dbWriteTable(ivgtt, "Begin", Begin, overwrite=TRUE)
+dbWriteTable(ivgtt, "Final", Final, overwrite=TRUE)
+dbWriteTable(ivgtt, "Combine", Combine, overwrite=TRUE)
+```
+
+
+```{sql,connection = ivgtt}
+CREATE TABLE notadjusted_ccc AS
+SELECT * FROM Begin b INNER JOIN Final f on b.betageneId=f.betageneId
+```
+
+```{r}
+notadjusted_ccc<-dbReadTable(ivgtt, "notadjusted_ccc", notadjusted_ccc, overwrite=TRUE)
+notadjusted_ccc$Date_B<-as.Date(as.character(notadjusted_ccc$IvgttDate), format = "%m/%d/%Y")
+notadjusted_ccc$Date_F<-as.Date(notadjusted_ccc$Date_F,"%m/%d/%Y")
+notadjusted_ccc$Time<-difftime(notadjusted_ccc$Date_F, notadjusted_ccc$Date_B, units="auto")
+notadjusted_ccc$Time<-notadjusted_ccc$Time/365
+write.csv(notadjusted_ccc,"notadjusted_ccc.csv", row.names = FALSE)
+```
+
+```{sql,connection = ivgtt}
+CREATE TABLE O_CCC AS
+SELECT * FROM notadjusted_ccc t INNER JOIN (SELECT ID, MTNR1B,CDKAL1 FROM Combine) c on t.betageneId=ID WHERE c.CDKAL1=0
+```
+
+```{r}
+O_CCC<-dbReadTable(ivgtt, "O_CCC", O_CCC, overwrite=TRUE)
+O_CCC$Date_B<-as.Date(O_CCC$IvgttDate,format="%m/%d/%Y")
+O_CCC$Date_F<-as.Date(O_CCC$Date_F,format = "%m/%d/%Y")
+O_CCC$Time<-difftime(O_CCC$Date_F, O_CCC$Date_B, units="auto")
+O_CCC$Time<-O_CCC$Time/365
+
+O_CCC = subset(O_CCC, select = -c(X,X.1,X0.1,betageneId.1,ID,IvgttDate) )
+O_CCC<-O_CCC %>% 
+  rename(
+    ID=betageneId,
+    studyAge_B=studyAge,
+    BFP_B=bodyFatPercent,
+    AIRG_B=AIRG,
+    Ins30_B=Ins30,
+    Ins0_B=IInsulin0,
+    SI_B=SI,
+    SG_B=SG,
+    DI_B=DI,
+    DI30_B=DI30,
+    II_B=insIndex,
+    Chol_B=cholesterol,
+    Chol_F=chol_F
+    )
+```
+
+```{r}
+O_CCC$Time<-as.numeric(O_CCC$Time)
+
+NA_CCC <- data.frame(matrix(ncol = 3, nrow = nrow(O_CCC)))
+
+colnames(NA_CCC) <- c('ID', 'AIRG', 'Chol')
+
+NA_CCC$ID<-O_CCC$ID
+NA_CCC$AIRG=(O_CCC$AIRG_B-O_CCC$AIRG_F)/O_CCC$Time
+NA_CCC$Chol=(O_CCC$Chol_B-O_CCC$Chol_F)/O_CCC$Time
+NA_CCC$DI=(O_CCC$DI_B-O_CCC$DI_F)/O_CCC$Time
+NA_CCC$II=(O_CCC$II_B-O_CCC$II_F)/O_CCC$Time
+NA_CCC$Ins0=(O_CCC$Ins0_B-O_CCC$Ins0_F)/O_CCC$Time
+NA_CCC$Ins30=(O_CCC$Ins30_B-O_CCC$Ins30_F)/O_CCC$Time
+NA_CCC$DI30=(O_CCC$DI30_B-O_CCC$DI30_F)/O_CCC$Time
+NA_CCC$SG=(O_CCC$SG_B-O_CCC$SG_F)/O_CCC$Time
+NA_CCC$SI=(O_CCC$SI_B-O_CCC$SI_F)/O_CCC$Time
+```
+
+```{r}
+slope_NA[3,] <- c(mean(O_CCC$Time,na.rm = TRUE),mean(NA_CCC$AIRG,na.rm = TRUE),mean(NA_CCC$Chol,na.rm = TRUE),mean(NA_CCC$DI,na.rm = TRUE),mean(NA_CCC$II,na.rm = TRUE),mean(NA_CCC$Ins0,na.rm = TRUE),mean(NA_CCC$Ins30,na.rm = TRUE),mean(NA_CCC$DI30,na.rm = TRUE),mean(NA_CCC$SG,na.rm = TRUE),mean(NA_CCC$SI,na.rm = TRUE))
+```
+

@@ -1,0 +1,310 @@
+---
+title: "plot"
+author: "Haoran Zhang"
+date: '2022-09-24'
+output: pdf_document
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(ggpubr)
+adjusted<-read.csv("Adjusted.csv")
+
+adjusted$MTNR1B<-as.factor(adjusted$MTNR1B)
+adjusted$CDKAL1<-as.factor(adjusted$CDKAL1)
+adjusted$M_Int <- ifelse((adjusted$MTNR1B == 0), "CC", 
+    ifelse((adjusted$MTNR1B==1) | (adjusted$MTNR1B==2), "CG/GG",
+    ""))
+adjusted$C_Int <- ifelse((adjusted$CDKAL1 == 0), "CC", 
+    ifelse((adjusted$CDKAL1==1) | (adjusted$CDKAL1==2), "CG/GG",
+    ""))
+
+woutna<-na.omit(adjusted)
+```
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "AIRG_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Chol_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "DI_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "insIndex_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Ins0_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Ins30_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Ins120_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "SG_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "SI_1", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+## BFP
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "AIRG_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Chol_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "DI_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "insIndex_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Ins0_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Ins30_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "Ins120_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "SG_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "MTNR1B", y = "SI_2", 
+          add = c("mean_se"),
+          color = "CDKAL1", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+## CDKAL1
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "AIRG_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Chol_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "DI_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "insIndex_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Ins0_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Ins30_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Ins120_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "SG_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "SI_1", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+## BFP
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "AIRG_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Chol_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "DI_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "insIndex_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Ins0_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Ins30_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "Ins120_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "SG_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```
+
+
+```{r}
+ggbarplot(woutna, x = "CDKAL1", y = "SI_2", 
+          add = c("mean_se"),
+          color = "MTNR1B", palette = "jco",
+          position = position_dodge(0.8))
+```

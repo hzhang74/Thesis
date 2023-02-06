@@ -1,0 +1,163 @@
+---
+title: "time slope"
+author: "Haoran Zhang"
+date: '2022-10-01'
+output: html_document
+---
+
+```{r}
+igvtt<-read.csv("Time")
+str(phen)
+```
+
+
+```{r}
+##Analysis 1: AGE+SEX
+time<-phen["ID"]
+
+a1=lm(AIRG~ studyAge+ sex, data= phen, na.action=na.exclude)
+AIRG_1= residuals(a1)+a1$coefficients[1]
+adjusted = cbind(adjusted, AIRG_1)
+
+a2=lm(BMI~ studyAge+ sex, data= phen, na.action=na.exclude)
+BMI_1= residuals(a2)+a2$coefficients[1]
+adjusted= cbind(adjusted,BMI_1)
+
+a3=lm(BFP~ + studyAge+ sex, data= phen, na.action=na.exclude)
+BFP_1= residuals(a3)+a3$coefficients[1]
+adjusted= cbind(adjusted,BFP_1)
+
+a4=lm(Chol~ studyAge+ sex, data= phen, na.action=na.exclude)
+Chol_1= residuals(a4)+a4$coefficients[1]
+adjusted= cbind(adjusted,Chol_1)
+
+a5=lm(DI~ studyAge+ sex, data= phen, na.action=na.exclude)
+DI_1= residuals(a5)+a5$coefficients[1]
+adjusted= cbind(adjusted,DI_1)
+
+a6=lm(DI30~ studyAge+ sex, data= phen, na.action=na.exclude)
+DI30_1= residuals(a6)+a6$coefficients[1]
+adjusted= cbind(adjusted,DI30_1)
+
+a7=lm(Glu0~ studyAge+ sex, data= phen, na.action=na.exclude)
+Glu0_1= residuals(a7)+a7$coefficients[1]
+adjusted= cbind(adjusted,Glu0_1)
+
+a8=lm(Glu120~ studyAge+ sex, data= phen, na.action=na.exclude)
+Glu120_1= residuals(a8)+a8$coefficients[1]
+adjusted= cbind(adjusted,Glu120_1)
+
+a9=lm(HDL~ studyAge+ sex, data= phen, na.action=na.exclude)
+HDL_1= residuals(a9)+a9$coefficients[1]
+adjusted= cbind(adjusted,HDL_1)
+
+a10=lm(insIndex~ studyAge+ sex, data= phen, na.action=na.exclude)
+insIndex_1= residuals(a10)+a10$coefficients[1]
+adjusted= cbind(adjusted,insIndex_1)
+
+a11=lm(Ins0~ studyAge+ sex, data= phen, na.action=na.exclude)
+Ins0_1= residuals(a11)+a11$coefficients[1]
+adjusted= cbind(adjusted,Ins0_1)
+
+a12=lm(Ins30~ studyAge+ sex, data= phen, na.action=na.exclude)
+Ins30_1= residuals(a12)+a12$coefficients[1]
+adjusted= cbind(adjusted,Ins30_1)
+
+a13=lm(Ins120~ studyAge+ sex, data= phen, na.action=na.exclude)
+Ins120_1= residuals(a13)+a13$coefficients[1]
+adjusted= cbind(adjusted,Ins120_1)
+
+a14=lm(SG~ studyAge+ sex, data= phen, na.action=na.exclude)
+SG_1= residuals(a14)+a14$coefficients[1]
+adjusted= cbind(adjusted,SG_1)
+
+a15=lm(SI~ studyAge+ sex, data= phen, na.action=na.exclude)
+SI_1= residuals(a15)+a15$coefficients[1]
+adjusted= cbind(adjusted,SI_1)
+
+a16=lm(Trig~ studyAge+ sex, data= phen, na.action=na.exclude)
+Trig_1= residuals(a16)+a16$coefficients[1]
+adjusted= cbind(adjusted,Trig_1)
+```
+
+```{r}
+##Analysis 2: AGE+SEX+BFP
+
+
+b1=lm(AIRG~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+AIRG_2= residuals(b1)+b1$coefficients[1]
+adjusted = cbind(adjusted, AIRG_2)
+
+b2=lm(BMI~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+BMI_2= residuals(b2)+b2$coefficients[1]
+adjusted= cbind(adjusted,BMI_2)
+
+b3=lm(BFP~ + studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+BFP_2= residuals(b3)+b3$coefficients[1]
+adjusted= cbind(adjusted,BFP_2)
+
+b4=lm(Chol~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Chol_2= residuals(b4)+b4$coefficients[1]
+adjusted= cbind(adjusted,Chol_2)
+
+b5=lm(DI~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+DI_2= residuals(b5)+b5$coefficients[1]
+adjusted= cbind(adjusted,DI_2)
+
+b6=lm(DI30~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+DI30_2= residuals(b6)+b6$coefficients[1]
+adjusted= cbind(adjusted,DI30_2)
+
+b7=lm(Glu0~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Glu0_2= residuals(b7)+b7$coefficients[1]
+adjusted= cbind(adjusted,Glu0_2)
+
+b8=lm(Glu120~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Glu120_2= residuals(b8)+b8$coefficients[1]
+adjusted= cbind(adjusted,Glu120_2)
+
+b9=lm(HDL~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+HDL_2= residuals(b9)+b9$coefficients[1]
+adjusted= cbind(adjusted,HDL_2)
+
+b10=lm(insIndex~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+insIndex_2= residuals(b10)+b10$coefficients[1]
+adjusted= cbind(adjusted,insIndex_2)
+
+b11=lm(Ins0~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Ins0_2= residuals(b11)+b11$coefficients[1]
+adjusted= cbind(adjusted,Ins0_2)
+
+b12=lm(Ins30~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Ins30_2= residuals(b12)+b12$coefficients[1]
+adjusted= cbind(adjusted,Ins30_2)
+
+b13=lm(Ins120~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Ins120_2= residuals(b13)+b13$coefficients[1]
+adjusted= cbind(adjusted,Ins120_2)
+
+b14=lm(SG~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+SG_2= residuals(b14)+b14$coefficients[1]
+adjusted= cbind(adjusted,SG_2)
+
+b15=lm(SI~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+SI_2= residuals(b15)+b15$coefficients[1]
+adjusted= cbind(adjusted,SI_2)
+
+b16=lm(Trig~ studyAge+ sex+ BFP, data= phen, na.action=na.exclude)
+Trig_2= residuals(b16)+b16$coefficients[1]
+adjusted= cbind(adjusted,Trig_2)
+```
+
+```{r}
+adjusted = cbind(adjusted,phen$MTNR1B)
+adjusted = cbind(adjusted,phen$CDKAL1)
+adjusted = cbind(adjusted,phen$MTCD)
+
+summary(adjusted$Ins120_2)
+```
+
+
+```{r}
+write.csv(adjusted,'C:\\Betagene\\Adjusted.csv', row.names = FALSE, na='')
+```

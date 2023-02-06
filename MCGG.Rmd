@@ -1,0 +1,308 @@
+---
+title: "MCG"
+author: "Haoran Zhang"
+date: '2022-10-01'
+output: html_document
+---
+
+```{r}
+library(RSQLite)
+library(lubridate)
+library(dplyr)
+ivgtt<-dbConnect(RSQLite::SQLite(),"ivgtt.sqlite")
+```
+
+
+```{r}
+Begin<-read.csv("Begin.csv")
+Final<-read.csv("Final.csv")
+Combine<-read.csv("Combine.csv")
+
+dbWriteTable(ivgtt, "Begin", Begin, overwrite=TRUE)
+dbWriteTable(ivgtt, "Final", Final, overwrite=TRUE)
+dbWriteTable(ivgtt, "Combine", Combine, overwrite=TRUE)
+```
+
+
+```{sql,connection = ivgtt}
+CREATE TABLE temp_mcgg AS
+SELECT * FROM Begin b INNER JOIN Final f on b.betageneId=f.betageneId
+```
+
+```{r}
+temp_mcgg<-dbReadTable(ivgtt, "temp_mcgg", temp_mcgg, overwrite=TRUE)
+temp_mcgg$Date_B<-as.Date(as.character(temp_mcgg$IvgttDate), format = "%m/%d/%Y")
+temp_mcgg$Date_F<-as.Date(temp_mcgg$Date_F,"%m/%d/%Y")
+temp_mcgg$Time<-difftime(temp_mcgg$Date_F, temp_mcgg$Date_B, units="auto")
+temp_mcgg$Time<-temp_mcgg$Time/365
+write.csv(temp_mcgg,"temp_mcgg.csv", row.names = FALSE)
+```
+
+```{sql,connection = ivgtt}
+CREATE TABLE M_CGG AS
+SELECT * FROM temp_mcgg t INNER JOIN (SELECT ID, MTNR1B,CDKAL1 FROM Combine) c on t.betageneId=ID WHERE c.MTNR1B=1 OR c.MTNR1B=2
+```
+
+```{r}
+M_CGG<-dbReadTable(ivgtt, "M_CGG", M_CGG, overwrite=TRUE)
+M_CGG$Date_B<-as.Date(M_CGG$IvgttDate,format="%m/%d/%Y")
+M_CGG$Date_F<-as.Date(M_CGG$Date_F,format = "%m/%d/%Y")
+M_CGG$Time<-difftime(M_CGG$Date_F, M_CGG$Date_B, units="auto")
+M_CGG$Time<-M_CGG$Time/365
+
+M_CGG = subset(M_CGG, select = -c(X,X.1,X0.1,betageneId.1,ID,IvgttDate) )
+M_CGG<-M_CGG %>% 
+  rename(
+    studyAge_B=studyAge,
+    BFP_B=bodyFatPercent,
+    AIRG_B=AIRG,
+    Ins30_B=Ins30,
+    Ins0_B=IInsulin0,
+    SI_B=SI,
+    SG_B=SG,
+    DI_B=DI,
+    DI30_B=DI30,
+    II_B=insIndex,
+    Chol_B=cholesterol,
+    Chol_F=chol_F
+    )
+
+write.csv(M_CGG,"M_CGG.csv", row.names = FALSE)
+```
+
+
+```{r}
+M_CGG<-read.csv("M_CGG.csv")
+
+##Analysis 1: AGE+SEX
+res_adjusted_mcgg<-as.data.frame(cbind(M_CGG$betageneId, M_CGG$Date_B, M_CGG$Date_F, M_CGG$Time, M_CGG$MTNR1B, M_CGG$CDKAL1))
+colnames(res_adjusted_mcgg)<-c("ID", "Date_B", "Date_F", "Time", "MTNR1B", "CDKAL1")
+
+
+a1=lm(AIRG_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+AIRG_B_1= residuals(a1)+a1$coefficients[1]
+res_adjusted_mcgg = cbind(res_adjusted_mcgg, AIRG_B_1)
+
+a2=lm(Chol_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+Chol_B_1= residuals(a2)+a2$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Chol_B_1)
+
+a3=lm(DI_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+DI_B_1= residuals(a3)+a3$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI_B_1)
+
+a4=lm(DI30_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+DI30_B_1= residuals(a4)+a4$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI30_B_1)
+
+a5=lm(II_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+insIndex_B_1= residuals(a5)+a5$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,insIndex_B_1)
+
+a6=lm(Ins0_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+Ins0_B_1= residuals(a6)+a6$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins0_B_1)
+
+a7=lm(Ins30_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+Ins30_B_1= residuals(a7)+a7$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins30_B_1)
+
+a8=lm(SG_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+SG_B_1= residuals(a8)+a8$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SG_B_1)
+
+a9=lm(SI_B~ studyAge_B+ sex, data= M_CGG, na.action=na.exclude)
+SI_B_1= residuals(a9)+a9$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SI_B_1)
+```
+
+```{r}
+##Analysis 2: AGE+SEX+BFP
+
+b1=lm(AIRG_B~ studyAge_B+ sex +BFP_B, data= M_CGG, na.action=na.exclude)
+AIRG_B_2= residuals(b1)+b1$coefficients[1]
+res_adjusted_mcgg = cbind(res_adjusted_mcgg, AIRG_B_2)
+
+b2=lm(Chol_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+Chol_B_2= residuals(b2)+b2$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Chol_B_2)
+
+b3=lm(DI_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+DI_B_2= residuals(b3)+b3$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI_B_2)
+
+b4=lm(DI30_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+DI30_B_2= residuals(b4)+b4$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI30_B_2)
+
+b5=lm(II_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+insIndex_B_2= residuals(b5)+b5$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,insIndex_B_2)
+
+b6=lm(Ins0_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+Ins0_B_2= residuals(b6)+b6$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins0_B_2)
+
+b7=lm(Ins30_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+Ins30_B_2= residuals(b7)+b7$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins30_B_2)
+
+b8=lm(SG_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+SG_B_2= residuals(b8)+b8$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SG_B_2)
+
+b9=lm(SI_B~ studyAge_B+ sex+BFP_B, data= M_CGG, na.action=na.exclude)
+SI_B_2= residuals(b9)+b9$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SI_B_2)
+```
+
+
+```{r}
+##Analysis 3: AGE+SEX Final
+y1=lm(AIRG_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+AIRG_F_1= residuals(y1)+y1$coefficients[1]
+res_adjusted_mcgg = cbind(res_adjusted_mcgg, AIRG_F_1)
+
+y2=lm(Chol_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+Chol_F_1= residuals(y2)+y2$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Chol_F_1)
+
+y3=lm(DI_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+DI_F_1= residuals(y3)+y3$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI_F_1)
+
+y4=lm(DI30_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+DI30_F_1= residuals(y4)+y4$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI30_F_1)
+
+y5=lm(II_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+insIndex_F_1= residuals(y5)+y5$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,insIndex_F_1)
+
+y6=lm(Ins0_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+Ins0_F_1= residuals(y6)+y6$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins0_F_1)
+
+y7=lm(Ins30_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+Ins30_F_1= residuals(y7)+y7$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins30_F_1)
+
+y8=lm(SG_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+SG_F_1= residuals(y8)+y8$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SG_F_1)
+
+y9=lm(SI_F~ studyAge_F+ sex, data= M_CGG, na.action=na.exclude)
+SI_F_1= residuals(y9)+y9$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SI_F_1)
+```
+
+```{r}
+##Analysis 4: AGE+SEX+BFP Final
+
+z1=lm(AIRG_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+AIRG_F_2= residuals(z1)+z1$coefficients[1]
+res_adjusted_mcgg = cbind(res_adjusted_mcgg, AIRG_F_2)
+
+z2=lm(Chol_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+Chol_F_2= residuals(z2)+z2$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Chol_F_2)
+
+z3=lm(DI_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+DI_F_2= residuals(z3)+z3$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI_F_2)
+
+z4=lm(DI30_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+DI30_F_2= residuals(z4)+z4$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,DI30_F_2)
+
+z5=lm(II_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+insIndex_F_2= residuals(z5)+z5$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,insIndex_F_2)
+
+z6=lm(Ins0_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+Ins0_F_2= residuals(z6)+z6$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins0_F_2)
+
+z7=lm(Ins30_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+Ins30_F_2= residuals(z7)+z7$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,Ins30_F_2)
+
+z8=lm(SG_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+SG_F_2= residuals(y8)+y8$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SG_F_2)
+
+z9=lm(SI_F~ studyAge_F+ sex+BFP_F, data= M_CGG, na.action=na.exclude)
+SI_F_2= residuals(z9)+z9$coefficients[1]
+res_adjusted_mcgg= cbind(res_adjusted_mcgg,SI_F_2)
+```
+
+
+```{r}
+write.csv(res_adjusted_mcgg,"res_adjusted_mcgg.csv", row.names = FALSE)
+```
+
+```{r}
+res_adjusted_mcgg$Time<-as.numeric(res_adjusted_mcgg$Time)
+
+Final_MCGG <- data.frame(matrix(ncol = 3, nrow = nrow(res_adjusted_mcgg)))
+
+colnames(Final_MCGG) <- c('ID', 'AIRG_1', 'Chol_1')
+
+Final_MCGG$ID<-res_adjusted_mcgg$ID
+Final_MCGG$AIRG_1=(res_adjusted_mcgg$AIRG_F_1-res_adjusted_mcgg$AIRG_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$Chol_1=(res_adjusted_mcgg$Chol_F_1-res_adjusted_mcgg$Chol_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$DI_1=(res_adjusted_mcgg$DI_F_1-res_adjusted_mcgg$DI_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$II_1=(res_adjusted_mcgg$insIndex_F_1-res_adjusted_mcgg$insIndex_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$Ins0_1=(res_adjusted_mcgg$Ins0_F_1-res_adjusted_mcgg$Ins0_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$Ins30_1=(res_adjusted_mcgg$Ins30_F_1-res_adjusted_mcgg$Ins30_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$DI30_1=(res_adjusted_mcgg$DI30_F_1-res_adjusted_mcgg$DI30_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$SG_1=(res_adjusted_mcgg$SG_F_1-res_adjusted_mcgg$SG_B_1)/res_adjusted_mcgg$Time
+Final_MCGG$SI_1=(res_adjusted_mcgg$SI_F_1-res_adjusted_mcgg$SI_B_1)/res_adjusted_mcgg$Time
+
+Final_MCGG$AIRG_2=(res_adjusted_mcgg$AIRG_F_2-res_adjusted_mcgg$AIRG_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$Chol_2=(res_adjusted_mcgg$Chol_F_2-res_adjusted_mcgg$Chol_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$DI_2=(res_adjusted_mcgg$DI_F_2-res_adjusted_mcgg$DI_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$II_2=(res_adjusted_mcgg$insIndex_F_2-res_adjusted_mcgg$insIndex_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$Ins0_2=(res_adjusted_mcgg$Ins0_F_2-res_adjusted_mcgg$Ins0_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$Ins30_2=(res_adjusted_mcgg$Ins30_F_2-res_adjusted_mcgg$Ins30_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$DI30_2=(res_adjusted_mcgg$DI30_F_2-res_adjusted_mcgg$DI30_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$SG_2=(res_adjusted_mcgg$SG_F_2-res_adjusted_mcgg$SG_B_2)/res_adjusted_mcgg$Time
+Final_MCGG$SI_2=(res_adjusted_mcgg$SI_F_2-res_adjusted_mcgg$SI_B_2)/res_adjusted_mcgg$Time
+```
+
+```{r}
+write.csv(Final_MCGG,"Final_MCGG.csv", row.names = FALSE)
+```
+
+```{r}
+slope[2,] <- c(mean(as.numeric(res_adjusted_mcgg$Time),na.rm = TRUE),mean(Final_MCGG$AIRG_1,na.rm = TRUE),mean(Final_MCGG$Chol_1,na.rm = TRUE),mean(Final_MCGG$DI_1,na.rm = TRUE),mean(Final_MCGG$II_1,na.rm = TRUE),mean(Final_MCGG$Ins0_1,na.rm = TRUE),mean(Final_MCGG$Ins30_1,na.rm = TRUE),mean(Final_MCGG$DI30_1,na.rm = TRUE),mean(Final_MCGG$SG_1,na.rm = TRUE),mean(Final_MCGG$SI_1,na.rm = TRUE),
+                             mean(Final_MCGG$AIRG_2,na.rm = TRUE),mean(Final_MCGG$Chol_2,na.rm = TRUE),mean(Final_MCGG$DI_2,na.rm = TRUE),mean(Final_MCGG$II_2,na.rm = TRUE),mean(Final_MCGG$Ins0_2,na.rm = TRUE),mean(Final_MCGG$Ins30_2,na.rm = TRUE),mean(Final_MCGG$DI30_2,na.rm = TRUE),mean(Final_MCGG$SG_2,na.rm = TRUE),mean(Final_MCGG$SI_2,na.rm = TRUE))
+```
+
+```{r}
+means_m <- data.frame(AIRG_1=double(),
+                 Chol_1=double(),
+                 DI_1=double(),
+                 DI30_1=double(),
+                 II_1=double(),
+                 Ins0_1=double(),
+                 Ins30_1=double(),
+                 SG_1=double(),
+                 SI_1=double(),
+                 AIRG_2=double(),
+                 Chol_2=double(),
+                 DI_2=double(),
+                 DI30_2=double(),
+                 II_2=double(),
+                 Ins0_2=double(),
+                 Ins30_2=double(),
+                 SG_2=double(),
+                 SI_2=double(),
+                 stringsAsFactors=FALSE)
+means_m[1,]<-colMeans(res_adjusted_mcc[7:24],na.rm = TRUE)
+means_m[2,]<-colMeans(res_adjusted_mcc[25:42],na.rm = TRUE)
+means_m[3,]<-colMeans(res_adjusted_mcgg[7:24],na.rm = TRUE)
+means_m[4,]<-colMeans(res_adjusted_mcgg[25:42],na.rm = TRUE)
+write.csv(means_m,"means_m.csv", row.names = FALSE)
+```
+

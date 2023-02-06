@@ -1,0 +1,40 @@
+load ped liver_solar.ped
+load phen liver_solar.phen
+
+model new
+covariate snp03
+trait bmi_as
+spormod
+maxi
+polymod
+maxi
+set withgene [loglike]
+set bsnp [read_model last.mod bsnp03]
+set bsnpse [read_model last.mod bsnp03 -se]
+parameter bsnp03 = 0
+constraint bsnp03 = 0
+maxi
+set nogene [loglike]
+set chisq [expr 2 * ($withgene - $nogene)]
+set df 1
+set pval [chi -number $chisq $df]
+putsout liver_solar.res "GCKR rs780094  bmi_as  beta = $bsnp  se = $bsnpse  chi = $chisq  p = $pval"
+
+model new
+covariate snp03
+trait pfat_as
+spormod
+maxi
+polymod
+maxi
+set withgene [loglike]
+set bsnp [read_model last.mod bsnp03]
+set bsnpse [read_model last.mod bsnp03 -se]
+parameter bsnp03 = 0
+constraint bsnp03 = 0
+maxi
+set nogene [loglike]
+set chisq [expr 2 * ($withgene - $nogene)]
+set df 1
+set pval [chi -number $chisq $df]
+putsout liver_solar.res "GCKR rs780094  pfat_as  beta = $bsnp  se = $bsnpse  chi = $chisq  p = $pval"

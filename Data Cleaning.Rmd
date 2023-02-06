@@ -1,0 +1,201 @@
+---
+title: "Data Cleaning"
+author: "Haoran Zhang"
+date: '2022-09-13'
+output: html_document
+---
+
+```{r}
+phen<-read.csv("phen.csv")
+str(phen)
+```
+
+```{r}
+##inverse normal trans
+inormal= function(a){
+  qnorm((rank(a, na.last = "keep") - 0.5) / sum(!is.na(a)))
+}
+```
+
+
+```{r}
+##Analysis 1: AGE+SEX
+combine<-phen["ID"]
+
+m1=lm(AIRG~ studyAge+ sex, data= phen, na.action=na.exclude)
+AIRG_1= inormal(residuals(m1)+m1$coefficients[1])
+combine = cbind(combine, AIRG_1)
+
+m2=lm(BMI~ studyAge+ sex, data= phen, na.action=na.exclude)
+BMI_1= inormal(residuals(m2)+m2$coefficients[1])
+combine= cbind(combine,BMI_1)
+
+m3=lm(BFP~ + studyAge+ sex, data= phen, na.action=na.exclude)
+BFP_1= inormal(residuals(m3)+m3$coefficients[1])
+combine= cbind(combine,BFP_1)
+
+m4=lm(Chol~ studyAge+ sex, data= phen, na.action=na.exclude)
+Chol_1= inormal(residuals(m4)+m4$coefficients[1])
+combine= cbind(combine,Chol_1)
+
+m5=lm(DI~ studyAge+ sex, data= phen, na.action=na.exclude)
+DI_1= inormal(residuals(m5)+m5$coefficients[1])
+combine= cbind(combine,DI_1)
+
+m6=lm(DI30~ studyAge+ sex, data= phen, na.action=na.exclude)
+DI30_1= inormal(residuals(m6)+m6$coefficients[1])
+combine= cbind(combine,DI30_1)
+
+m7=lm(Glu0~ studyAge+ sex, data= phen, na.action=na.exclude)
+Glu0_1= inormal(residuals(m7)+m7$coefficients[1])
+combine= cbind(combine,Glu0_1)
+
+m8=lm(Glu120~ studyAge+ sex, data= phen, na.action=na.exclude)
+Glu120_1= inormal(residuals(m8)+m8$coefficients[1])
+combine= cbind(combine,Glu120_1)
+
+m9=lm(HDL~ studyAge+ sex, data= phen, na.action=na.exclude)
+HDL_1= inormal(residuals(m9)+m9$coefficients[1])
+combine= cbind(combine,HDL_1)
+
+m10=lm(insIndex~ studyAge+ sex, data= phen, na.action=na.exclude)
+insIndex_1= inormal(residuals(m10)+m10$coefficients[1])
+combine= cbind(combine,insIndex_1)
+
+m11=lm(Ins0~ studyAge+ sex, data= phen, na.action=na.exclude)
+Ins0_1= inormal(residuals(m11)+m11$coefficients[1])
+combine= cbind(combine,Ins0_1)
+
+m12=lm(Ins30~ studyAge+ sex, data= phen, na.action=na.exclude)
+Ins30_1= inormal(residuals(m12)+m12$coefficients[1])
+combine= cbind(combine,Ins30_1)
+
+m13=lm(Ins120~ studyAge+ sex, data= phen, na.action=na.exclude)
+Ins120_1= inormal(residuals(m13)+m13$coefficients[1])
+combine= cbind(combine,Ins120_1)
+
+m14=lm(SG~ studyAge+ sex, data= phen, na.action=na.exclude)
+SG_1= inormal(residuals(m14)+m14$coefficients[1])
+combine= cbind(combine,SG_1)
+
+m15=lm(SI~ studyAge+ sex, data= phen, na.action=na.exclude)
+SI_1= inormal(residuals(m15)+m15$coefficients[1])
+combine= cbind(combine,SI_1)
+
+m16=lm(Trig~ studyAge+ sex, data= phen, na.action=na.exclude)
+Trig_1= inormal(residuals(m16)+m16$coefficients[1])
+combine= cbind(combine,Trig_1)
+
+
+```
+
+```{r}
+n1=lm(AIRG~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+AIRG_2= inormal(residuals(n1)+n1$coefficients[1])
+combine = cbind(combine, AIRG_2)
+
+n2=lm(BMI~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+BMI_2= inormal(residuals(n2)+n2$coefficients[1])
+combine= cbind(combine,BMI_2)
+
+n3=lm(BFP~ + studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+BFP_2= inormal(residuals(n3)+n3$coefficients[1])
+combine= cbind(combine,BFP_2)
+
+n4=lm(Chol~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Chol_2= inormal(residuals(n4)+n4$coefficients[1])
+combine= cbind(combine,Chol_2)
+
+n5=lm(DI~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+DI_2= inormal(residuals(n5)+n5$coefficients[1])
+combine= cbind(combine,DI_2)
+
+n6=lm(DI30~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+DI30_2= inormal(residuals(n6)+n6$coefficients[1])
+combine= cbind(combine,DI30_2)
+
+n7=lm(Glu0~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Glu0_2= inormal(residuals(n7)+n7$coefficients[1])
+combine= cbind(combine,Glu0_2)
+
+n8=lm(Glu120~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Glu120_2= inormal(residuals(n8)+n8$coefficients[1])
+combine= cbind(combine,Glu120_2)
+
+n9=lm(HDL~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+HDL_2= inormal(residuals(n9)+n9$coefficients[1])
+combine= cbind(combine,HDL_2)
+
+n10=lm(insIndex~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+insIndex_2= inormal(residuals(n10)+n10$coefficients[1])
+combine= cbind(combine,insIndex_2)
+
+n11=lm(Ins0~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Ins0_2= inormal(residuals(n11)+n11$coefficients[1])
+combine= cbind(combine,Ins0_2)
+
+n12=lm(Ins30~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Ins30_2= inormal(residuals(n12)+n12$coefficients[1])
+combine= cbind(combine,Ins30_2)
+
+n13=lm(Ins120~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Ins120_2= inormal(residuals(n13)+n13$coefficients[1])
+combine= cbind(combine,Ins120_2)
+
+n14=lm(SG~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+SG_2= inormal(residuals(n14)+n14$coefficients[1])
+combine= cbind(combine,SG_2)
+
+n15=lm(SI~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+SI_2= inormal(residuals(n15)+n15$coefficients[1])
+combine= cbind(combine,SI_2)
+
+n16=lm(Trig~ studyAge+ sex + BFP, data= phen, na.action=na.exclude)
+Trig_2= inormal(residuals(n16)+n16$coefficients[1])
+combine= cbind(combine,Trig_2)
+
+combine = cbind(combine,phen$MTNR1B)
+combine = cbind(combine,phen$CDKAL1)
+combine = cbind(combine,phen$MTCD)
+```
+
+```{r}
+write.csv(combine,'C:\\Betagene\\Combine.csv', row.names = FALSE, na='')
+```
+
+
+
+
+
+```{r, eval=FALSE}
+##Analysis 2: AGE+SEX+BFP
+
+n1=lm(BMI~ studyAge+ sex+ bodyFatPercent , data= phen, na.action=na.exclude)
+bmi2= inormal(residuals(M1))
+combine= cbind(combine,bmi2)
+
+n2=lm(Glu_f~ age+ sex+ bodyFatPercent, data= phen, na.action=na.exclude)
+glu_f2= inormal(residuals(M2))
+combine= cbind(combine,glu_f2)
+
+n3=lm(Glu_2h~ age+ sex+ bodyFatPercent, data= phen, na.action=na.exclude)
+glu_2h2= inormal(residuals(M3))
+combine= cbind(combine,glu_2h2)
+
+n4=lm(In_f~ age+ sex+ bodyFatPercent, data= phen, na.action=na.exclude)
+in_f2= inormal(residuals(M4))
+combine= cbind(combine,in_f2)
+
+n5=lm(In_2h~ age+ sex+ bodyFatPercent, data= phen, na.action=na.exclude)
+in_2h2= inormal(residuals(M5))
+combine= cbind(combine,in_2h2)
+
+n6=lm(SI~ age+ sex+ bodyFatPercent, data= phen, na.action=na.exclude)
+si2= inormal(residuals(M6))
+combine= cbind(combine,si2)
+
+n7=lm(SG~ age+ sex+ bodyFatPercent, data= phen, na.action=na.exclude)
+sg2= inormal(residuals(M7))
+combine= cbind(combine,sg2)
+```
+

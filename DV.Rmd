@@ -1,0 +1,317 @@
+---
+title: "DV"
+author: "Haoran Zhang"
+date: '2022-10-04'
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+```
+
+
+```{r}
+MM<-read.csv("MTNR1B_plot.csv")
+CC<-read.csv("CDKAL1_plot.csv")
+```
+
+```{r}
+M_AIRG_1<-MM %>%
+  ggplot(aes(Time,AIRG_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_Chol_1<-MM %>%
+  ggplot(aes(Time,Chol_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_DI_1<-MM %>%
+  ggplot(aes(Time,DI_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_II_1<-MM %>%
+  ggplot(aes(Time,II_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_Ins0_1<-MM %>%
+  ggplot(aes(Time,Ins0_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_Ins30_1<-MM %>%
+  ggplot(aes(Time,Ins30_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_DI30_1<-MM %>%
+  ggplot(aes(Time,DI30_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_SG_1<-MM %>%
+  ggplot(aes(Time,SG_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_SI_1<-MM %>%
+  ggplot(aes(Time,SI_1)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+
+## BFP
+```{r}
+M_AIRG_2<-MM %>%
+  ggplot(aes(Time,AIRG_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+```{r}
+M_Chol_2<-MM %>%
+  ggplot(aes(Time,Chol_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_DI_2<-MM %>%
+  ggplot(aes(Time,DI_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_II_2<-MM %>%
+  ggplot(aes(Time,II_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_Ins0_2<-MM %>%
+  ggplot(aes(Time,Ins0_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_Ins30_2<-MM %>%
+  ggplot(aes(Time,Ins30_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_DI30_2<-MM %>%
+  ggplot(aes(Time,DI30_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_SG_2<-MM %>%
+  ggplot(aes(Time,SG_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+```{r}
+M_SI_2<-MM %>%
+  ggplot(aes(Time,SI_2)) +
+  geom_point(aes(shape = MTNR1B, color = MTNR1B), size = 3) + 
+  geom_line(aes(group = MTNR1B))
+```
+
+
+## CDKAL1
+```{r}
+C_AIRG_1<-CC %>%
+  ggplot(aes(Time,AIRG_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_Chol_1<-CC %>%
+  ggplot(aes(Time,Chol_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_DI_1<-CC %>%
+  ggplot(aes(Time,DI_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_II_1<-CC %>%
+  ggplot(aes(Time,II_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_Ins0_1<-CC %>%
+  ggplot(aes(Time,Ins0_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_Ins30_1<-CC %>%
+  ggplot(aes(Time,Ins30_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_DI30_1<-CC %>%
+  ggplot(aes(Time,DI30_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_SG_1<-CC %>%
+  ggplot(aes(Time,SG_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_SI_1<-CC %>%
+  ggplot(aes(Time,SI_1)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+
+## BFP
+```{r}
+C_AIRG_2<-CC %>%
+  ggplot(aes(Time,AIRG_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+```{r}
+C_Chol_2<-CC %>%
+  ggplot(aes(Time,Chol_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_DI_2<-CC %>%
+  ggplot(aes(Time,DI_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_II_2<-CC %>%
+  ggplot(aes(Time,II_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_Ins0_2<-CC %>%
+  ggplot(aes(Time,Ins0_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_Ins30_2<-CC %>%
+  ggplot(aes(Time,Ins30_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_DI30_2<-CC %>%
+  ggplot(aes(Time,DI30_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_SG_2<-CC %>%
+  ggplot(aes(Time,SG_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+C_SI_2<-CC %>%
+  ggplot(aes(Time,SI_2)) +
+  geom_point(aes(shape = CDKAL1, color = CDKAL1), size = 3) + 
+  geom_line(aes(group = CDKAL1))
+```
+
+```{r}
+M_AIRG_1
+M_Chol_1
+M_DI_1
+M_II_1
+M_Ins0_1
+M_Ins30_1
+M_DI30_1
+M_SG_1
+M_SI_1
+
+M_AIRG_2
+M_Chol_2
+M_DI_2
+M_II_2
+M_Ins0_2
+M_Ins30_2
+M_DI30_2
+M_SG_2
+M_SI_2
+
+
+C_AIRG_1
+C_Chol_1
+C_DI_1
+C_II_1
+C_Ins0_1
+C_Ins30_1
+C_DI30_1
+C_SG_1
+C_SI_1
+
+C_AIRG_2
+C_Chol_2
+C_DI_2
+C_II_2
+C_Ins0_2
+C_Ins30_2
+C_DI30_2
+C_SG_2
+C_SI_2
+```
+

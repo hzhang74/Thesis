@@ -1,0 +1,69 @@
+---
+title: '1'
+author: "Haoran Zhang"
+date: '2022-07-29'
+output: html_document
+---
+
+```{r}
+child<-read.csv("phen children.csv")
+```
+
+```{r}
+ped$fatherID[ped$fatherID == "0"] <-""
+ped$motherID[ped$motherID == "0"] <-""
+ped$rs10830963[ped$rs10830963 == "NMI"] <- ""
+ped$rs10830963[ped$rs10830963 == "CC"] <- "0"
+ped$rs10830963[ped$rs10830963 == "CG"] <- "1"
+ped$rs10830963[ped$rs10830963 == "GG"] <- "2"
+ped$rs7754840[ped$rs7754840 == "NMI"] <- ""
+ped$rs7754840[ped$rs7754840 == "CC"] <- "0"
+ped$rs7754840[ped$rs7754840 == "CG"] <- "1"
+ped$rs7754840[ped$rs7754840 == "GG"] <- "2"
+```
+
+```{r}
+write.csv(ped,"ped.csv", row.names = TRUE)
+```
+
+```{r}
+adult<-read.csv("phen adults.csv")
+```
+
+```{r}
+adult<-subset(adult, betageneId != "0")
+```
+
+```{r}
+write.csv(adult,"adult_phen.csv", row.names = TRUE)
+```
+
+```{r}
+ped_adult<-read.csv("Adult.csv")
+ped_adult<-subset(ped_adult, betageneId != "0")
+write.csv(ped_adult,"ped_adult.csv", row.names = FALSE)
+```
+
+```{r}
+ped_children<-read.csv("Children.csv")
+ped_children<-subset(ped_children, betageneId != "0")
+write.csv(ped_children,"ped_children.csv", row.names = FALSE)
+```
+
+```{r}
+pedi<-read.csv("pedi.csv")
+pedi<-pedi[!duplicated(pedi$ID), ]
+```
+
+
+
+
+```{r}
+ped<-rbind(ped_adult, ped_children)
+write.csv(ped,"pedi.csv", row.names = FALSE)
+```
+
+```{r}
+phen<-rbind(adult, child)
+write.csv(phen,"phen.csv", row.names = FALSE)
+```

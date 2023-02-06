@@ -1,0 +1,419 @@
+---
+title: "Predict Slope"
+author: "Haoran Zhang"
+date: '2022-11-14'
+output: html_document
+---
+
+```{r}
+CCG<-read.csv("Final_ccg.csv")
+CGG<-read.csv("Final_cgg.csv")
+MCC<-read.csv("Final_MCC.csv")
+MCGG<-read.csv("Final_MCGG.csv")
+
+a<-O_CCG[c("ID","Time")]
+a$Time<-as.numeric(O_CCG$Time)
+b<-O_CGG[c("ID","Time")]
+b$Time<-as.numeric(O_CGG$Time)
+c<-O_MCC[c("ID","Time")]
+d<-O_MCGG[c("ID","Time")]
+k<-Combine[c("ID","MTNR1B","CDKAL1")]
+k$CDKAL1[k$CDKAL1 == 1] <- 0
+k$CDKAL1[k$CDKAL1 == 2] <- 1
+k$MTNR1B[k$MTNR1B == 2] <- 1
+mean(CCG_all$AIRG_1,na.rm = TRUE)
+```
+
+```{r}
+CCGt <- merge(CCG, a, by.x = "ID", by.y = "ID")
+CGGt <- merge(CGG, b, by.x = "ID", by.y = "ID")
+MCCt <- merge(MCC, c, by.x = "ID", by.y = "ID")
+MCGGt <- merge(MCGG, d, by.x = "ID", by.y = "ID")
+```
+
+```{r}
+CCG_all <- merge(CCGt, k, by.x = "ID", by.y = "ID")
+CGG_all <- merge(CGGt, k, by.x = "ID", by.y = "ID")
+MCC_all <- merge(MCCt, k, by.x = "ID", by.y = "ID")
+MCGG_all <- merge(MCGGt, k, by.x = "ID", by.y = "ID")
+
+C_all<-rbind(CCG_all,CGG_all)
+M_all<-rbind(MCC_all,MCGG_all)
+```
+
+```{r}
+##Analysis 1: AGE+SEX
+C_reg<-C_all["ID"]
+
+a1=lm(AIRG_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+AIRG_1= a1$coefficients[1]+a1$coefficients[2]*C_all$CDKAL1
+
+a1=lm(AIRG_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+AIRG_1=a1$coefficients[1]+a1$coefficients[2]*C_all$CDKAL1
+C_reg = cbind(C_reg, AIRG_1)
+
+a2=lm(Chol_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+Chol_1= a2$coefficients[1]+a2$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,Chol_1)
+
+a3=lm(DI_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+DI_1= a3$coefficients[1]+a3$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,DI_1)
+
+a4=lm(DI30_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+DI30_1= a4$coefficients[1]+a4$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,DI30_1)
+
+a5=lm(II_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+insIndex_1= a5$coefficients[1]+a5$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,insIndex_1)
+
+a6=lm(Ins0_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+Ins0_1= a6$coefficients[1]+a6$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,Ins0_1)
+
+a7=lm(Ins30_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+Ins30_1= a7$coefficients[1]+a7$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,Ins30_1)
+
+a8=lm(SG_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+SG_1= a8$coefficients[1]+a8$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,SG_1)
+
+a9=lm(SI_1 ~ CDKAL1, data= C_all, na.action=na.exclude)
+SI_1= a9$coefficients[1]+a9$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,SI_1)
+```
+
+```{r}
+b1=lm(AIRG_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+AIRG_2= b1$coefficients[1]+b1$coefficients[2]*C_all$CDKAL1
+C_reg = cbind(C_reg, AIRG_2)
+
+b2=lm(Chol_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+Chol_2= b2$coefficients[1]+b2$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,Chol_2)
+
+b3=lm(DI_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+DI_2= b3$coefficients[1]+b3$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,DI_2)
+
+b4=lm(DI30_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+DI30_2= b4$coefficients[1]+b4$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,DI30_2)
+
+b5=lm(II_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+insIndex_2= b5$coefficients[1]+b5$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,insIndex_2)
+
+b6=lm(Ins0_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+Ins0_2= b6$coefficients[1]+b6$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,Ins0_2)
+
+b7=lm(Ins30_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+Ins30_2= b7$coefficients[1]+b7$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,Ins30_2)
+
+b8=lm(SG_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+SG_2= b8$coefficients[1]+b8$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,SG_2)
+
+b9=lm(SI_2 ~ CDKAL1, data= C_all, na.action=na.exclude)
+SI_2= b9$coefficients[1]+b9$coefficients[2]*C_all$CDKAL1
+C_reg= cbind(C_reg,SI_2)
+```
+
+
+```{r}
+##Analysis 1: AGE+SEX
+M_reg<-M_all["ID"]
+
+##Analysis 1: AGE+SEX
+#M_reg<-as.data.frame(cbind(ccg$betageneId, ccg$Date_B, ccg$Date_F, ccg$Time, ccg$MTNR1B, ccg$CDKAL1))
+#colnames(M_reg)<-c("ID", "Date_B", "Date_F", "Time", "MTNR1B", "CDKAL1")
+
+
+x1=lm(AIRG_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+AIRG_1= x1$coefficients[1]+x1$coefficients[2]*M_all$MTNR1B
+M_reg = cbind(M_reg, AIRG_1)
+
+x2=lm(Chol_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+Chol_1= x2$coefficients[1]+x2$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,Chol_1)
+
+x3=lm(DI_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+DI_1= x3$coefficients[1]+x3$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,DI_1)
+
+x4=lm(DI30_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+DI30_1= x4$coefficients[1]+x4$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,DI30_1)
+
+x5=lm(II_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+insIndex_1= x5$coefficients[1]+x5$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,insIndex_1)
+
+x6=lm(Ins0_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+Ins0_1= x6$coefficients[1]+x6$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,Ins0_1)
+
+x7=lm(Ins30_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+Ins30_1= x7$coefficients[1]+x7$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,Ins30_1)
+
+x8=lm(SG_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+SG_1= x8$coefficients[1]+x8$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,SG_1)
+
+x9=lm(SI_1 ~ MTNR1B, data= M_all, na.action=na.exclude)
+SI_1= x9$coefficients[1]+x9$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,SI_1)
+```
+
+```{r}
+y1=lm(AIRG_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+AIRG_2= y1$coefficients[1]+y1$coefficients[2]*M_all$MTNR1B
+M_reg = cbind(M_reg, AIRG_2)
+
+y2=lm(Chol_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+Chol_2= y2$coefficients[1]+y2$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,Chol_2)
+
+y3=lm(DI_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+DI_2= y3$coefficients[1]+y3$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,DI_2)
+
+y4=lm(DI30_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+DI30_2= y4$coefficients[1]+y4$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,DI30_2)
+
+y5=lm(II_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+insIndex_2= y5$coefficients[1]+y5$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,insIndex_2)
+
+y6=lm(Ins0_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+Ins0_2= y6$coefficients[1]+y6$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,Ins0_2)
+
+y7=lm(Ins30_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+Ins30_2= y7$coefficients[1]+y7$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,Ins30_2)
+
+y8=lm(SG_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+SG_2= y8$coefficients[1]+y8$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,SG_2)
+
+y9=lm(SI_2 ~ MTNR1B, data= M_all, na.action=na.exclude)
+SI_2= y9$coefficients[1]+y9$coefficients[2]*M_all$MTNR1B
+M_reg= cbind(M_reg,SI_2)
+```
+
+```{r}
+write.csv(C_reg,"new_slope_c.csv", row.names = FALSE)
+write.csv(M_reg,"new_slope_M.csv", row.names = FALSE)
+mean(C_reg$AIRG_1,na.rm = TRUE)
+```
+
+```{r}
+oak_ccg<-merge(res_adjusted_ccg,C_reg,by.x = "ID", by.y = "ID")
+pred_ccg<-oak_ccg["ID"]
+
+
+pred_ccg$pred_AIRG_1<-oak_ccg$AIRG_B_1+5*oak_ccg$AIRG_1/oak_ccg$Time
+pred_ccg$pred_Chol_1<-oak_ccg$Chol_B_1+5*oak_ccg$Chol_1/oak_ccg$Time
+pred_ccg$pred_DI_1<-oak_ccg$DI_B_1+5*oak_ccg$DI_1/oak_ccg$Time
+pred_ccg$pred_DI30_1<-oak_ccg$DI30_B_1+5*oak_ccg$DI30_1/oak_ccg$Time
+pred_ccg$pred_II_1<-oak_ccg$insIndex_B_1+5*oak_ccg$insIndex_1/oak_ccg$Time
+pred_ccg$pred_Ins0_1<-oak_ccg$Ins0_B_1+5*oak_ccg$Ins0_1/oak_ccg$Time
+pred_ccg$pred_Ins30_1<-oak_ccg$Ins30_B_1+5*oak_ccg$Ins30_1/oak_ccg$Time
+pred_ccg$pred_SG_1<-oak_ccg$SG_B_1+5*oak_ccg$SG_1/oak_ccg$Time
+pred_ccg$pred_SI_1<-oak_ccg$SI_B_1+5*oak_ccg$SI_1/oak_ccg$Time
+
+mean(oak_cgg$AIRG_1,na.rm = TRUE)
+```
+
+```{r}
+oak_cgg<-merge(res_adjusted_cgg,C_reg,by.x = "ID", by.y = "ID")
+pred_cgg<-oak_cgg["ID"]
+
+
+pred_cgg$pred_AIRG_1<-oak_cgg$AIRG_B_1+5*oak_cgg$AIRG_1/oak_cgg$Time
+pred_cgg$pred_Chol_1<-oak_cgg$Chol_B_1+5*oak_cgg$Chol_1/oak_cgg$Time
+pred_cgg$pred_DI_1<-oak_cgg$DI_B_1+5*oak_cgg$DI_1/oak_cgg$Time
+pred_cgg$pred_DI30_1<-oak_cgg$DI30_B_1+5*oak_cgg$DI30_1/oak_cgg$Time
+pred_cgg$pred_II_1<-oak_cgg$insIndex_B_1+5*oak_cgg$insIndex_1/oak_cgg$Time
+pred_cgg$pred_Ins0_1<-oak_cgg$Ins0_B_1+5*oak_cgg$Ins0_1/oak_cgg$Time
+pred_cgg$pred_Ins30_1<-oak_cgg$Ins30_B_1+5*oak_cgg$Ins30_1/oak_cgg$Time
+pred_cgg$pred_SG_1<-oak_cgg$SG_B_1+5*oak_cgg$SG_1/oak_cgg$Time
+pred_cgg$pred_SI_1<-oak_cgg$SI_B_1+5*oak_cgg$SI_1/oak_cgg$Time
+```
+
+```{r}
+oak_mcc<-merge(res_adjusted_mcc,M_reg,by.x = "ID", by.y = "ID")
+oak_mcc$Time<-as.numeric(oak_mcc$Time)
+pred_mcc<-oak_mcc["ID"]
+
+
+pred_mcc$pred_AIRG_1<-oak_mcc$AIRG_B_1+5*oak_mcc$AIRG_1
+pred_mcc$pred_Chol_1<-oak_mcc$Chol_B_1+5*oak_mcc$Chol_1
+pred_mcc$pred_DI_1<-oak_mcc$DI_B_1+5*oak_mcc$DI_1
+pred_mcc$pred_DI30_1<-oak_mcc$DI30_B_1+5*oak_mcc$DI30_1
+pred_mcc$pred_II_1<-oak_mcc$insIndex_B_1+5*oak_mcc$insIndex_1
+pred_mcc$pred_Ins0_1<-oak_mcc$Ins0_B_1+5*oak_mcc$Ins0_1
+pred_mcc$pred_Ins30_1<-oak_mcc$Ins30_B_1+5*oak_mcc$Ins30_1
+pred_mcc$pred_SG_1<-oak_mcc$SG_B_1+5*oak_mcc$SG_1
+pred_mcc$pred_SI_1<-oak_mcc$SI_B_1+5*oak_mcc$SI_1
+
+mean(pred_mcgg$pred_AIRG_1,na.rm = TRUE)
+```
+
+```{r}
+oak_mcgg<-merge(res_adjusted_mcgg,M_reg,by.x = "ID", by.y = "ID")
+oak_mcgg$Time<-as.numeric(oak_mcgg$Time)
+pred_mcgg<-oak_mcgg["ID"]
+
+
+pred_mcgg$pred_AIRG_1<-oak_mcgg$AIRG_B_1+5*oak_mcgg$AIRG_1
+pred_mcgg$pred_Chol_1<-oak_mcgg$Chol_B_1+5*oak_mcgg$Chol_1
+pred_mcgg$pred_DI_1<-oak_mcgg$DI_B_1+5*oak_mcgg$DI_1
+pred_mcgg$pred_DI30_1<-oak_mcgg$DI30_B_1+5*oak_mcgg$DI30_1
+pred_mcgg$pred_II_1<-oak_mcgg$insIndex_B_1+5*oak_mcgg$insIndex_1
+pred_mcgg$pred_Ins0_1<-oak_mcgg$Ins0_B_1+5*oak_mcgg$Ins0_1
+pred_mcgg$pred_Ins30_1<-oak_mcgg$Ins30_B_1+5*oak_mcgg$Ins30_1
+pred_mcgg$pred_SG_1<-oak_mcgg$SG_B_1+5*oak_mcgg$SG_1
+pred_mcgg$pred_SI_1<-oak_mcgg$SI_B_1+5*oak_mcgg$SI_1
+```
+
+```{r}
+pred_ccg$pred_AIRG_2<-oak_ccg$AIRG_B_2+5*oak_ccg$AIRG_2
+pred_ccg$pred_Chol_2<-oak_ccg$Chol_B_2+5*oak_ccg$Chol_2
+pred_ccg$pred_DI_2<-oak_ccg$DI_B_2+5*oak_ccg$DI_2
+pred_ccg$pred_DI30_2<-oak_ccg$DI30_B_2+5*oak_ccg$DI30_2
+pred_ccg$pred_II_2<-oak_ccg$insIndex_B_2+5*oak_ccg$insIndex_2
+pred_ccg$pred_Ins0_2<-oak_ccg$Ins0_B_2+5*oak_ccg$Ins0_2
+pred_ccg$pred_Ins30_2<-oak_ccg$Ins30_B_2+5*oak_ccg$Ins30_2
+pred_ccg$pred_SG_2<-oak_ccg$SG_B_2+5*oak_ccg$SG_2
+pred_ccg$pred_SI_2<-oak_ccg$SI_B_2+5*oak_ccg$SI_2
+
+mean(pred_ccg$pred_AIRG_2,na.rm = TRUE)
+```
+
+```{r}
+pred_cgg$pred_AIRG_2<-oak_cgg$AIRG_B_2+5*oak_cgg$AIRG_2
+pred_cgg$pred_Chol_2<-oak_cgg$Chol_B_2+5*oak_cgg$Chol_2
+pred_cgg$pred_DI_2<-oak_cgg$DI_B_2+5*oak_cgg$DI_2
+pred_cgg$pred_DI30_2<-oak_cgg$DI30_B_2+5*oak_cgg$DI30_2
+pred_cgg$pred_II_2<-oak_cgg$insIndex_B_2+5*oak_cgg$insIndex_2
+pred_cgg$pred_Ins0_2<-oak_cgg$Ins0_B_2+5*oak_cgg$Ins0_2
+pred_cgg$pred_Ins30_2<-oak_cgg$Ins30_B_2+5*oak_cgg$Ins30_2
+pred_cgg$pred_SG_2<-oak_cgg$SG_B_2+5*oak_cgg$SG_2
+pred_cgg$pred_SI_2<-oak_cgg$SI_B_2+5*oak_cgg$SI_2
+```
+
+```{r}
+pred_mcc$pred_AIRG_2<-oak_mcc$AIRG_B_2+5*oak_mcc$AIRG_2
+pred_mcc$pred_Chol_2<-oak_mcc$Chol_B_2+5*oak_mcc$Chol_2
+pred_mcc$pred_DI_2<-oak_mcc$DI_B_2+5*oak_mcc$DI_2
+pred_mcc$pred_DI30_2<-oak_mcc$DI30_B_2+5*oak_mcc$DI30_2
+pred_mcc$pred_II_2<-oak_mcc$insIndex_B_2+5*oak_mcc$insIndex_2
+pred_mcc$pred_Ins0_2<-oak_mcc$Ins0_B_2+5*oak_mcc$Ins0_2
+pred_mcc$pred_Ins30_2<-oak_mcc$Ins30_B_2+5*oak_mcc$Ins30_2
+pred_mcc$pred_SG_2<-oak_mcc$SG_B_2+5*oak_mcc$SG_2
+pred_mcc$pred_SI_2<-oak_mcc$SI_B_2+5*oak_mcc$SI_2
+```
+
+```{r}
+pred_mcgg$pred_AIRG_2<-oak_mcgg$AIRG_B_2+5*oak_mcgg$AIRG_2
+pred_mcgg$pred_Chol_2<-oak_mcgg$Chol_B_2+5*oak_mcgg$Chol_2
+pred_mcgg$pred_DI_2<-oak_mcgg$DI_B_2+5*oak_mcgg$DI_2
+pred_mcgg$pred_DI30_2<-oak_mcgg$DI30_B_2+5*oak_mcgg$DI30_2
+pred_mcgg$pred_II_2<-oak_mcgg$insIndex_B_2+5*oak_mcgg$insIndex_2
+pred_mcgg$pred_Ins0_2<-oak_mcgg$Ins0_B_2+5*oak_mcgg$Ins0_2
+pred_mcgg$pred_Ins30_2<-oak_mcgg$Ins30_B_2+5*oak_mcgg$Ins30_2
+pred_mcgg$pred_SG_2<-oak_mcgg$SG_B_2+5*oak_mcgg$SG_2
+pred_mcgg$pred_SI_2<-oak_mcgg$SI_B_2+5*oak_mcgg$SI_2
+
+mean(pred_mcgg$pred_AIRG_2,na.rm = TRUE)
+```
+
+
+```{r}
+new2_ccg<-data.frame(colMeans(pred_ccg[2:19],na.rm = TRUE))
+mean_ccg<-t(new2_ccg)
+rownames(mean_ccg) <- "ccg"
+mean_ccg<-as.data.frame(mean_ccg)
+```
+
+```{r}
+new2_cgg<-data.frame(colMeans(pred_cgg[2:19],na.rm = TRUE))
+mean_cgg<-t(new2_cgg)
+rownames(mean_cgg) <- "cgg"
+mean_cgg<-as.data.frame(mean_cgg)
+```
+
+```{r}
+new2_mcgg<-data.frame(colMeans(pred_mcgg[2:19],na.rm = TRUE))
+mean_mcgg<-t(new2_mcgg)
+rownames(mean_mcgg) <- "mcgg"
+mean_mcgg<-as.data.frame(mean_mcgg)
+```
+
+```{r}
+new2_mcc<-data.frame(colMeans(pred_mcc[2:19],na.rm = TRUE))
+mean_mcc<-t(new2_mcc)
+rownames(mean_mcc) <- "mcc"
+mean_mcc<-as.data.frame(mean_mcc)
+```
+
+```{r}
+mean_all<-rbind(mean_mcc,mean_mcgg,mean_ccg,mean_cgg)
+```
+
+```{r}
+new1_mcc<-data.frame(colMeans(oak_mcc[7:24],na.rm = TRUE))
+mean1_mcc<-t(new1_mcc)
+rownames(mean1_mcc) <- "mcc"
+mean1_mcc<-as.data.frame(mean1_mcc)
+```
+
+```{r}
+new1_mcgg<-data.frame(colMeans(oak_mcgg[7:24],na.rm = TRUE))
+mean1_mcgg<-t(new1_mcgg)
+rownames(mean1_mcgg) <- "mcgg"
+mean1_mcgg<-as.data.frame(mean1_mcgg)
+```
+
+```{r}
+new1_cgg<-data.frame(colMeans(oak_cgg[7:24],na.rm = TRUE))
+mean1_cgg<-t(new1_cgg)
+rownames(mean1_cgg) <- "cgg"
+mean1_cgg<-as.data.frame(mean1_cgg)
+```
+
+```{r}
+new1_ccg<-data.frame(colMeans(oak_ccg[7:24],na.rm = TRUE))
+mean1_ccg<-t(new1_ccg)
+rownames(mean1_ccg) <- "ccg"
+mean1_ccg<-as.data.frame(mean1_ccg)
+```
+
+```{r}
+mean1_all<-rbind(mean1_mcc,mean1_mcgg,mean1_ccg,mean1_cgg)
+```
+
+```{r}
+write.csv(mean1_all,"mean_begin.csv")
+write.csv(mean_all,"mean_final.csv")
+```
+
+```{r}
+mean1_all
+```
+
+```{r}
+mean_all
+```
+
+```{r}
+t.test(res_adjusted_ccc$AIRG_B_1, res_adjusted_ccc$AIRG_F_1, paired = TRUE, alternative = "two.sided")
+```

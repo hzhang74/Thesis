@@ -1,0 +1,43 @@
+---
+title: "Visualization"
+author: "Haoran Zhang"
+date: '2022-10-02'
+output: html_document
+---
+
+```{r}
+MCC<-read.csv("res_adjusted_mcc.csv")
+MCG<-read.csv("res_adjusted_mcgg.csv")
+CCC<-read.csv("res_adjusted_ccc.csv")
+CCG<-read.csv("res_adjusted_ccgg.csv")
+```
+
+
+```{r}
+MT<-rbind(MCC,MCG)
+CD<-rbind(CCC,CCG)
+MT <- MT %>% 
+  mutate(M_cat = if_else(MTNR1B=="0", "CC", "CG/GG"))
+CD <- CD %>% 
+  mutate(C_cat = if_else(CDKAL1=="0", "CC", "CG/GG"))
+
+#MT$MTNR1B<-as.factor(MT$MTNR1B)
+#MT$CDKAL1<-as.factor(MT$CDKAL1)
+
+#CD$MTNR1B<-as.factor(CD$MTNR1B)
+#CD$CDKAL1<-as.factor(CD$CDKAL1)
+
+tableau<-as.data.frame(cbind(MT$ID, MT$Date_B, MT$Date_F, MT$Time, MT$AIRG_B_1, MT$AIRG_F_1, MT$M_cat))
+colnames(tableau)<-c("ID", "Date_B", "Date_F", "Time","AIRG_B","AIRG_F", "MTNR1B")
+write.csv(tableau,"tableau.csv", row.names = FALSE)
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+ggplot(MT, aes(x=Date_B, y=AIRG_B_1, color=M_cat,shape=M_cat)) +
+  geom_point() + 
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)
+```
+

@@ -1,0 +1,33 @@
+---
+title: "mean_unadj"
+author: "Haoran Zhang"
+date: '2022-10-06'
+output: html_document
+---
+
+```{r}
+mean_B_unadj <- data.frame(Duration=double(),
+                AIRG_B=double(),
+                 Chol_B=double(),
+                 DI_B=double(),
+                 II_B=double(),
+                 Ins0_B=double(),
+                 Ins30_B=double(),
+                 DI30_B=double(),
+                 SG_B=double(),
+                 SI_B=double(),
+                 stringsAsFactors=FALSE)
+
+mean_B_unadj[1,] <- c(mean(O_MCC$Time,na.rm = TRUE),mean(O_MCC$AIRG_B,na.rm = TRUE),mean(O_MCC$Chol_B,na.rm = TRUE),mean(O_MCC$DI_B,na.rm = TRUE),mean(O_MCC$II_B,na.rm = TRUE),mean(O_MCC$Ins0_B,na.rm = TRUE),mean(O_MCC$Ins30_B,na.rm = TRUE),mean(O_MCC$DI30_B,na.rm = TRUE),mean(O_MCC$SG_B,na.rm = TRUE),mean(O_MCC$SI_B,na.rm = TRUE))
+
+mean_B_unadj[2,] <- c(mean(O_MCGG$Time,na.rm = TRUE),mean(O_MCGG$AIRG_B,na.rm = TRUE),mean(O_MCGG$Chol_B,na.rm = TRUE),mean(O_MCGG$DI_B,na.rm = TRUE),mean(O_MCGG$II_B,na.rm = TRUE),mean(O_MCGG$Ins0_B,na.rm = TRUE),mean(O_MCGG$Ins30_B,na.rm = TRUE),mean(O_MCGG$DI30_B,na.rm = TRUE),mean(O_MCGG$SG_B,na.rm = TRUE),mean(O_MCGG$SI_B,na.rm = TRUE))
+
+mean_B_unadj[3,] <- c(mean(as.numeric(O_CCC$Time),na.rm = TRUE),mean(O_CCC$AIRG_B,na.rm = TRUE),mean(O_CCC$Chol_B,na.rm = TRUE),mean(O_CCC$DI_B,na.rm = TRUE),mean(O_CCC$II_B,na.rm = TRUE),mean(O_CCC$Ins0_B,na.rm = TRUE),mean(O_CCC$Ins30_B,na.rm = TRUE),mean(O_CCC$DI30_B,na.rm = TRUE),mean(O_CCC$SG_B,na.rm = TRUE),mean(O_CCC$SI_B,na.rm = TRUE))
+
+mean_B_unadj[4,] <- c(mean(as.numeric(O_CCGG$Time),na.rm = TRUE),mean(O_CCGG$AIRG_B,na.rm = TRUE),mean(O_CCGG$Chol_B,na.rm = TRUE),mean(O_CCGG$DI_B,na.rm = TRUE),mean(O_CCGG$II_B,na.rm = TRUE),mean(O_CCGG$Ins0_B,na.rm = TRUE),mean(O_CCGG$Ins30_B,na.rm = TRUE),mean(O_CCGG$DI30_B,na.rm = TRUE),mean(O_CCGG$SG_B,na.rm = TRUE),mean(O_CCGG$SI_B,na.rm = TRUE))
+rownames(mean_B_unadj)<-c("M_CC","M_CGG","C_CC","C_CGG")
+```
+
+```{r}
+#write.csv(mean_B,"mean.csv", row.names = FALSE)
+```
